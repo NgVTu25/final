@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Product Formula</title>
+    <link rel="stylesheet" th:href="@{/styles.css}" type="text/css">
+</head>
+<body>
+<div th:replace="header :: header"></div>
+<div class="container">
+    <h2>Add Product Formula</h2>
+    <form method="post" th:action="@{/formulas/add}" th:object="${formula}">
+        <div class="form-group">
+            <label>Name:</label>
+            <input required th:field="*{name}" type="text"/>
+        </div>
+        <div class="form-group">
+            <label>Identifier:</label>
+            <input required th:field="*{identifier}" type="text"/>
+        </div>
+        <div class="form-group">
+            <label>Excipients:</label>
+            <div th:each="excipient, iterStat : ${formula.excipients}">
+                <div class="excipient-entry">
+                    <label>Name:</label>
+                    <input required th:field="*{excipients[__${iterStat.index}__].name}" type="text"/>
+                    <label>Concentration:</label>
+                    <input required th:field="*{excipients[__${iterStat.index}__].concentration}" type="text"/>
+                    <label>Role:</label>
+                    <input required th:field="*{excipients[__${iterStat.index}__].role}" type="text"/>
+                </div>
+            </div>
+            <button onclick="addExcipient()" type="button">Add Excipient</button>
+        </div>
+        <div class="form-group">
+            <label>Formula Versions:</label>
+            <div th:each="version, iterStat : ${formula.formulaVersions}">
+                <div class="version-entry">
+                    <label>Created Date:</label>
+                    <input required th:field="*{formulaVersions[__${iterStat.index}__].createdDate}" type="date"/>
+                    <label>Created By:</label>
+                    <input required th:field="*{formulaVersions[__${iterStat.index}__].createdBy}" type="text"/>
+                    <label>Version Note:</label>
+                    <input required th:field="*{formulaVersions[__${iterStat.index}__].versionNote}" type="text"/>
+                </div>
+            </div>
+            <button onclick="addVersion()" type="button">Add Version</button>
+        </div>
+        <button type="submit">Add Formula</button>
+    </form>
+    <a class="back-link" th:href="@{/formulas}">Back to Formulas</a>
+</div>
+
+<script>
+    function addExcipient() {
+        let excipientsDiv = document.querySelector("div[th\\:each='excipient, iterStat : ${formula.excipients}']");
+        let newExcipient = excipientsDiv.cloneNode(true);
+        excipientsDiv.parentNode.insertBefore(newExcipient, excipientsDiv.nextSibling);
+    }
+
+    function addVersion() {
+        let versionsDiv = document.querySelector("div[th\\:each='version, iterStat : ${formula.formulaVersions}']");
+        let newVersion = versionsDiv.cloneNode(true);
+        versionsDiv.parentNode.insertBefore(newVersion, versionsDiv.nextSibling);
+    }
+</script>
+</body>
+</html>

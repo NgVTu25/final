@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/styles.css}" type="text/css">
+</head>
+<body>
+<div th:fragment="header">
+    <div class="header">
+        <nav>
+            <a th:href="@{/formulas}">Home</a>
+            <a th:href="@{/formulas/add}">Add New Formula</a>
+            <a th:href="@{/logout}">Log Out</a>
+        </nav>
+    </div>
+</div>
+</body>
+</html>

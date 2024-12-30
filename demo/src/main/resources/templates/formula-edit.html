@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Product Formula</title>
+    <link rel="stylesheet" th:href="@{/styles.css}" type="text/css">
+</head>
+<body>
+<div th:replace="header :: header"></div>
+<div class="container">
+    <h2>Edit Product Formula</h2>
+    <form id="formulaForm" method="post" th:action="@{/formulas/edit}" th:object="${formula}">
+        <input th:field="*{id}" type="hidden"/>
+        <div class="form-group">
+            <label>Name:</label>
+            <input required th:field="*{name}" type="text"/>
+        </div>
+        <div class="form-group">
+            <label>Identifier:</label>
+            <input required th:field="*{identifier}" type="text"/>
+        </div>
+        <div class="form-group">
+            <label>Excipients:</label>
+            <div id="excipientsContainer">
+                <!-- Existing excipients will be rendered here -->
+                <div class="excipient-entry" th:each="excipient, iterStat : ${formula.excipients}">
+                    <label>Name:</label>
+                    <input required th:field="*{excipients[__${iterStat.index}__].name}" type="text"/>
+                    <label>Concentration:</label>
+                    <input required th:field="*{excipients[__${iterStat.index}__].concentration}" type="text"/>
+                    <label>Role:</label>
+                    <input required th:field="*{excipients[__${iterStat.index}__].role}" type="text"/>
+                </div>
+            </div>
+            <button id="addExcipientButton" type="button">Add Excipient</button>
+        </div>
+        <div class="form-group">
+            <label>Formula Versions:</label>
+            <div id="versionsContainer">
+                <!-- Existing versions will be rendered here -->
+                <div class="version-entry" th:each="version, iterStat : ${formula.formulaVersions}">
+                    <label>Created Date:</label>
+                    <input required th:field="*{formulaVersions[__${iterStat.index}__].createdDate}" type="date"/>
+                    <label>Created By:</label>
+                    <input required th:field="*{formulaVersions[__${iterStat.index}__].createdBy}" type="text"/>
+                    <label>Version Note:</label>
+                    <input required th:field="*{formulaVersions[__${iterStat.index}__].versionNote}" type="text"/>
+                </div>
+            </div>
+            <button id="addVersionButton" type="button">Add Version</button>
+        </div>
+        <button type="submit">Update Formula</button>
+    </form>
+    <a class="back-link" th:href="@{/formulas}">Back to Formulas</a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let excipientIndex = /*[[${#lists.size(formula.excipients)}]]*/ 0;
+        let versionIndex = /*[[${#lists.size(formula.formulaVersions)}]]*/ 0;
+
+        document.getElementById('addExcipientButton').addEventListener('click', function () {
+            const excipientsContainer = document.getElementById('excipientsContainer');
+            const newExcipient = document.createElement('div');
+            newExcipient.classList.add('excipient-entry');
+            newExcipient.innerHTML = `
+                <label>Name:</label>
+                <input type="text" name="excipients[${excipientIndex}].name" required />
+                <label>Concentration:</label>
+                <input type="text" name="excipients[${excipientIndex}].concentration" required />
+                <label>Role:</label>
+                <input type="text" name="excipients[${excipientIndex}].role" required />
+            `;
+            excipientsContainer.appendChild(newExcipient);
+            excipientIndex++;
+        });
+
+        document.getElementById('addVersionButton').addEventListener('click', function () {
+            const versionsContainer = document.getElementById('versionsContainer');
+            const newVersion = document.createElement('div');
+            newVersion.classList.add('version-entry');
+            newVersion.innerHTML = `
+                <label>Created Date:</label>
+                <input type="date" name="formulaVersions[${versionIndex}].createdDate" required />
+                <label>Created By:</label>
+                <input type="text" name="formulaVersions[${versionIndex}].createdBy" required />
+                <label>Version Note:</label>
+                <input type="text" name="formulaVersions[${versionIndex}].versionNote" required />
+            `;
+            versionsContainer.appendChild(newVersion);
+            versionIndex++;
+        });
+    });
+</script>
+</body>
+</html>

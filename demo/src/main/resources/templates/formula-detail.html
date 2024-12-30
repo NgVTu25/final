@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product Formula Detail</title>
+    <link rel="stylesheet" th:href="@{/styles.css}" type="text/css">
+</head>
+<body>
+<div class="container">
+    <h2>Product Formula Detail</h2>
+    <div class="formula-detail">
+        <div class="detail-section">
+            <label><strong>Name:</strong></label>
+            <span th:text="${formula.name}">Product Name</span>
+        </div>
+        <div class="detail-section">
+            <label><strong>Identifier:</strong></label>
+            <span th:text="${formula.identifier}">Identifier</span>
+        </div>
+        <div class="detail-section">
+            <label><strong>Excipients:</strong></label>
+            <ul>
+                <li th:each="excipient : ${formula.excipients}">
+                    <span th:text="${excipient.name}">Excipient Name</span> -
+                    <span th:text="${excipient.concentration}">Concentration</span> -
+                    <span th:text="${excipient.role}">Role</span>
+                </li>
+            </ul>
+        </div>
+        <div class="detail-section">
+            <label><strong>Formula Versions:</strong></label>
+            <ul>
+                <li th:each="version : ${formula.formulaVersions}">
+                    <span th:text="${version.createdDate}">Created Date</span> -
+                    <span th:text="${version.createdBy}">Created By</span> -
+                    <span th:text="${version.versionNote}">Version Note</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <a class="back-link" th:href="@{/formulas}">Back to Formulas</a>
+</div>
+</body>
+</html>
