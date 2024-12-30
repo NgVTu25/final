@@ -18,23 +18,19 @@ public class ProductFormulaController {
     @Autowired
     private ProductFormulaService productFormulaService;
 
-    // Hiển thị danh sách các công thức sản phẩm
-
-    @GetMapping()
-    public String home() {
-        return "redirect:/formulas";
-    }
-
+    // Hiển thị trang đăng nhập
     @GetMapping("/login")
     public String loginPage() {
         return "login";
     }
 
+    // Hiển thị trang đăng ký
     @GetMapping("/register")
     public String registerPage() {
-        return "register"; // Ensure you have a register.html template
+        return "register";
     }
 
+    // Hiển thị danh sách các công thức sản phẩm
     @GetMapping
     public String viewFormulas(Model model) {
         model.addAttribute("formulas", productFormulaService.getAllProductFormulas());
@@ -71,6 +67,7 @@ public class ProductFormulaController {
         return "redirect:/formulas";
     }
 
+    // Hiển thị form để chỉnh sửa công thức sản phẩm
     @GetMapping("/edit/{id}")
     public String editFormulaForm(@PathVariable String id, Model model, Authentication authentication) {
         Optional<ProductFormula> formula = productFormulaService.getProductFormulaById(id);

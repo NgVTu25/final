@@ -49,19 +49,5 @@
     </form>
     <a class="back-link" th:href="@{/formulas}">Back to Formulas</a>
 </div>
-
-<script>
-    function addExcipient() {
-        let excipientsDiv = document.querySelector("div[th\\:each='excipient, iterStat : ${formula.excipients}']");
-        let newExcipient = excipientsDiv.cloneNode(true);
-        excipientsDiv.parentNode.insertBefore(newExcipient, excipientsDiv.nextSibling);
-    }
-
-    function addVersion() {
-        let versionsDiv = document.querySelector("div[th\\:each='version, iterStat : ${formula.formulaVersions}']");
-        let newVersion = versionsDiv.cloneNode(true);
-        versionsDiv.parentNode.insertBefore(newVersion, versionsDiv.nextSibling);
-    }
-</script>
 </body>
 </html>

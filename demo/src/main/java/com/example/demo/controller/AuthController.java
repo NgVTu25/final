@@ -1,35 +1,40 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.RegisterRequest;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/auth")
+@Controller
 public class AuthController {
 
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
-    public AuthController(@Lazy PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
+    private PasswordEncoder passwordEncoder;
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 
-    @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest) {
-        // Implement login logic
-        return "Login successful";
+    @GetMapping("/register")
+    public String register(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest registerRequest) {
-        // Implement registration logic
-        return "Registration successful";
+    public String registerUser(@ModelAttribute User user, Model model) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        model.addAttribute("message", "User registered successfully");
+        return "login";
     }
 }
