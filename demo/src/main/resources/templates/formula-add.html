@@ -1,53 +1,213 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Add Product Formula</title>
-    <link rel="stylesheet" th:href="@{/styles.css}" type="text/css">
+    <title>Add Formula</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script>
+        function addExcipient() {
+            const container = document.getElementById('excipients-container');
+            const index = container.children.length;
+            const newExcipient = document.createElement('div');
+            newExcipient.innerHTML = `
+                <label>Excipient ${index + 1}:</label>
+                <input type="text" name="excipients[${index}].name" placeholder="Name" required>
+                <input type="text" name="excipients[${index}].concentration" placeholder="Concentration" required>
+                <input type="text" name="excipients[${index}].role" placeholder="Role" required>
+                <br>`;
+            container.appendChild(newExcipient);
+        }
+
+        function addVersion() {
+            const container = document.getElementById('versions-container');
+            const index = container.children.length;
+            const newVersion = document.createElement('div');
+            newVersion.innerHTML = `
+                <label>Version ${index + 1}:</label>
+                <input type="text" name="formulaVersions[${index}].createdDate" placeholder="Created Date" required>
+                <input type="text" name="formulaVersions[${index}].createdBy" placeholder="Created By" required>
+                <input type="text" name="formulaVersions[${index}].versionNote" placeholder="Version Note" required>
+                <br>`;
+            container.appendChild(newVersion);
+        }
+    </script>
 </head>
 <body>
-<div th:replace="header :: header"></div>
 <div class="container">
-    <h2>Add Product Formula</h2>
+    <h2>Add Formula</h2>
     <form method="post" th:action="@{/formulas/add}" th:object="${formula}">
-        <div class="form-group">
-            <label>Name:</label>
-            <input required th:field="*{name}" type="text"/>
+        <div>
+            <label for="name">Name:</label>
+            <input id="name" required th:field="*{name}" type="text">
         </div>
-        <div class="form-group">
-            <label>Identifier:</label>
-            <input required th:field="*{identifier}" type="text"/>
+        <div>
+            <label for="identifier">Identifier:</label>
+            <input id="identifier" required th:field="*{identifier}" type="text">
         </div>
-        <div class="form-group">
-            <label>Excipients:</label>
-            <div th:each="excipient, iterStat : ${formula.excipients}">
-                <div class="excipient-entry">
-                    <label>Name:</label>
-                    <input required th:field="*{excipients[__${iterStat.index}__].name}" type="text"/>
-                    <label>Concentration:</label>
-                    <input required th:field="*{excipients[__${iterStat.index}__].concentration}" type="text"/>
-                    <label>Role:</label>
-                    <input required th:field="*{excipients[__${iterStat.index}__].role}" type="text"/>
-                </div>
+        <div>
+            <label for="excipients">Excipients:</label>
+            <div id="excipients-container">
+                <!-- Existing excipients will be rendered here -->
             </div>
             <button onclick="addExcipient()" type="button">Add Excipient</button>
         </div>
-        <div class="form-group">
-            <label>Formula Versions:</label>
-            <div th:each="version, iterStat : ${formula.formulaVersions}">
-                <div class="version-entry">
-                    <label>Created Date:</label>
-                    <input required th:field="*{formulaVersions[__${iterStat.index}__].createdDate}" type="date"/>
-                    <label>Created By:</label>
-                    <input required th:field="*{formulaVersions[__${iterStat.index}__].createdBy}" type="text"/>
-                    <label>Version Note:</label>
-                    <input required th:field="*{formulaVersions[__${iterStat.index}__].versionNote}" type="text"/>
-                </div>
+        <div>
+            <label for="formulaVersions">Formula Versions:</label>
+            <div id="versions-container">
+                <!-- Existing formula versions will be rendered here -->
             </div>
             <button onclick="addVersion()" type="button">Add Version</button>
         </div>
-        <button type="submit">Add Formula</button>
+        <button type="submit">Save</button>
     </form>
-    <a class="back-link" th:href="@{/formulas}">Back to Formulas</a>
 </div>
+
+<style>/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.header {
+    background-color: #007bff;
+    padding: 10px;
+}
+
+.header nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.header nav a:hover {
+    text-decoration: underline;
+}
+
+.add-formula-link, .back-link {
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.add-formula-link:hover, .back-link:hover {
+    background-color: #0056b3;
+}
+
+.formulas-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.formulas-table th, .formulas-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.formulas-table th {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.formulas-table td {
+    background-color: #f9f9f9;
+}
+
+.formulas-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.formula-detail {
+    margin-top: 20px;
+}
+
+.detail-section {
+    margin-bottom: 20px;
+}
+
+.detail-section label {
+    font-weight: bold;
+}
+
+.detail-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.detail-section ul li {
+    margin-bottom: 5px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.excipient-entry, .version-entry {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #eef;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.excipient-entry label, .version-entry label {
+    display: inline-block;
+    width: 100px;
+}
+
+button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+</style>
 </body>
 </html>

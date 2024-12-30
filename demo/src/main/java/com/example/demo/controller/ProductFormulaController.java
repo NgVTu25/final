@@ -18,26 +18,22 @@ public class ProductFormulaController {
     @Autowired
     private ProductFormulaService productFormulaService;
 
-    // Hiển thị trang đăng nhập
     @GetMapping("/login")
     public String loginPage() {
         return "login";
     }
 
-    // Hiển thị trang đăng ký
     @GetMapping("/register")
     public String registerPage() {
         return "register";
     }
 
-    // Hiển thị danh sách các công thức sản phẩm
     @GetMapping
     public String viewFormulas(Model model) {
         model.addAttribute("formulas", productFormulaService.getAllProductFormulas());
         return "formulas";
     }
 
-    // Hiển thị chi tiết một công thức sản phẩm
     @GetMapping("/{id}")
     public String viewFormulaDetail(@PathVariable String id, Model model) {
         Optional<ProductFormula> formula = productFormulaService.getProductFormulaById(id);
@@ -50,7 +46,6 @@ public class ProductFormulaController {
         }
     }
 
-    // Hiển thị form để thêm mới công thức sản phẩm
     @GetMapping("/add")
     public String addFormulaForm(Model model) {
         ProductFormula formula = new ProductFormula();
@@ -60,19 +55,16 @@ public class ProductFormulaController {
         return "formula-add";
     }
 
-    // Xử lý yêu cầu thêm mới công thức sản phẩm
     @PostMapping("/add")
     public String addFormula(@ModelAttribute ProductFormula formula, Model model) {
         productFormulaService.saveProductFormula(formula);
         return "redirect:/formulas";
     }
 
-    // Hiển thị form để chỉnh sửa công thức sản phẩm
     @GetMapping("/edit/{id}")
     public String editFormulaForm(@PathVariable String id, Model model, Authentication authentication) {
         Optional<ProductFormula> formula = productFormulaService.getProductFormulaById(id);
         if (formula.isPresent()) {
-            // Check if the user has the correct role
             if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
                 model.addAttribute("errorMessage", "Admins are not allowed to edit product formulas");
                 return "error";
@@ -85,7 +77,6 @@ public class ProductFormulaController {
         }
     }
 
-    // Xử lý yêu cầu chỉnh sửa công thức sản phẩm
     @PostMapping("/edit")
     public String editFormula(@ModelAttribute("formula") ProductFormula formula, Model model) {
         productFormulaService.saveProductFormula(formula);
@@ -93,7 +84,6 @@ public class ProductFormulaController {
         return "redirect:/formulas";
     }
 
-    // Xử lý yêu cầu xóa công thức sản phẩm
     @GetMapping("/delete/{id}")
     public String deleteFormula(@PathVariable String id, Model model) {
         if (productFormulaService.deleteProductFormula(id)) {
